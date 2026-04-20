@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EUTON HEALTH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 50%, #667eea 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(74, 124, 89, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(143, 188, 143, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(102, 126, 234, 0.2) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        /* Efeito de fundo animado com glassmorphism */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+            animation: float 6s ease-in-out infinite;
+            z-index: 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Segundo elemento flutuante com efeito granulado */
+        .floating-bubble {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: 
+                radial-gradient(circle, rgba(143, 188, 143, 0.15) 0%, rgba(74, 124, 89, 0.1) 100%);
+            border-radius: 50%;
+            bottom: -30px;
+            right: -30px;
+            animation: float 8s ease-in-out infinite reverse;
+            z-index: 0;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            filter: contrast(1.1);
+        }
+
+        .floating-bubble::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            border-radius: 50%;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(20px);
+            animation: slideUp 0.5s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.02) 1px,
+                    rgba(255, 255, 255, 0.02) 2px
+                );
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            box-shadow: 
+                0 8px 20px rgba(74, 124, 89, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a7c59;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 0 0 3px rgba(74, 124, 89, 0.1),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            backdrop-filter: blur(5px);
+        }
+
+        input::placeholder {
+            color: #bbb;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 
+                0 5px 15px rgba(74, 124, 89, 0.4),
+                0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 20px rgba(74, 124, 89, 0.6),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #5a8c69 0%, #9fcc9f 100%);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            background-color: #fee;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+            font-size: 14px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .footer-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer-text a:hover {
+            color: #764ba2;
+        }
+
+        /* Responsivo para celulares */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            input {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo-icon">🏥</div>
+            <h2>SAÚDE FUTURA</h2>
+            <p class="subtitle">Seja bem-vinda(o) ao seu canal de acompanhamento psicoloógio online!</p>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <p th:if="${param.error}" class="error">❌ Credenciais inválidas!</p>
+
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div class="footer-links">
+            <p class="footer-text">
+                <a href="/cadastroUsuario">Criar nova conta</a> | 
+                <a href="#" onclick="alert('Funcionalidade de recuperação de senha em desenvolvimento!')">Esqueceu a senha?</a>
+            </p>
+        </div>
+    </div>
+    <div class="floating-bubble"></div>
+</body>
+</html>
