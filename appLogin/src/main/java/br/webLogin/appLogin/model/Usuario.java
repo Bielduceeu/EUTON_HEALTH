@@ -7,6 +7,12 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
+/*EM geral, esta classe representa a entidade "Usuario" que será mapeada para uma tabela no banco de
+//  dados. Ela possui campos para armazenar informações do usuário, como nome, email e senha,
+//  além de um campo id que é gerado automaticamente pelo banco de dados. A anotação @Data do Lombok 
+// é usada para gerar automaticamente os métodos getters, setters, equals, hashCode e toString, simplificando
+//  o código da classe. As anotações de validação (@NotEmpty) garantem que os campos nome, email e senha não
+//  sejam deixados em branco ao criar ou atualizar um usuário.*/
 @Entity
 @Data
 public class Usuario {

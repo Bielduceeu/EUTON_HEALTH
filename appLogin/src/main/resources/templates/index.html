@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Landing page institucional da EUTON HEALTH com comunicacao acolhedora, design minimalista e apoio visual em 3D."
+    >
+    <title>EUTON HEALTH | Cuidado psicologico com clareza e acolhimento</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script
+        type="module"
+        src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"
+    ></script>
+
+    <style>
+        /* =========================
+           Design tokens
+        ========================== */
+        :root {
+            --bg-base: #f4f7f6;
+            --bg-deep: #dce8e4;
+            --surface: rgba(255, 255, 255, 0.56);
+            --surface-strong: rgba(255, 255, 255, 0.74);
+            --surface-muted: rgba(255, 255, 255, 0.4);
+            --text-main: #18332d;
+            --text-soft: #4e6761;
+            --text-faint: #6c817b;
+            --line-soft: rgba(24, 51, 45, 0.08);
+            --line-strong: rgba(255, 255, 255, 0.55);
+            --brand: #2f6b5f;
+            --brand-deep: #234f46;
+            --brand-soft: #d5e7e0;
+            --accent: #7c98a6;
+            --shadow-soft: 0 24px 70px rgba(38, 69, 62, 0.09);
+            --shadow-card: 0 18px 40px rgba(33, 62, 56, 0.08);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            --container: min(1160px, calc(100vw - 2rem));
+            --header-height: 82px;
+            --transition: 260ms ease-in-out;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Inter", system-ui, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at top left, rgba(173, 204, 194, 0.55), transparent 34%),
+                radial-gradient(circle at bottom right, rgba(172, 190, 210, 0.28), transparent 28%),
+                linear-gradient(180deg, #f6faf8, var(--bg-base) 38%, #edf4f1 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 34rem;
+            height: 34rem;
+            border-radius: 50%;
+            filter: blur(28px);
+            opacity: 0.45;
+            z-index: -2;
+            pointer-events: none;
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            top: -10rem;
+            left: -8rem;
+            background: radial-gradient(circle, rgba(121, 156, 147, 0.28), transparent 65%);
+        }
+
+        body::after {
+            right: -10rem;
+            bottom: -12rem;
+            background: radial-gradient(circle, rgba(130, 152, 173, 0.22), transparent 65%);
+            animation-duration: 22s;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            width: var(--container);
+            margin: 0 auto;
+        }
+
+        .glass {
+            background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+            border: 1px solid var(--line-strong);
+            box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(18px) saturate(135%);
+            -webkit-backdrop-filter: blur(18px) saturate(135%);
+        }
+
+        .section {
+            padding: 4.5rem 0;
+        }
+
+        .section-header {
+            display: grid;
+            gap: 0.9rem;
+            margin-bottom: 2.25rem;
+            max-width: 44rem;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 2rem;
+            height: 1px;
+            background: rgba(47, 107, 95, 0.35);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: clamp(2.6rem, 5vw, 4.7rem);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            max-width: 11ch;
+        }
+
+        h2 {
+            font-size: clamp(1.85rem, 3vw, 2.8rem);
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            line-height: 1.35;
+        }
+
+        p {
+            color: var(--text-soft);
+            line-height: 1.72;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 3.25rem;
+            padding: 0.9rem 1.25rem;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition:
+                transform var(--transition),
+                box-shadow var(--transition),
+                background-color var(--transition),
+                border-color var(--transition);
+            cursor: pointer;
+        }
+
+        .btn:hover,
+        .btn:focus-visible {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            color: #f6fbf9;
+            background: linear-gradient(180deg, var(--brand), var(--brand-deep));
+            box-shadow: 0 14px 28px rgba(47, 107, 95, 0.18);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus-visible {
+            box-shadow: 0 18px 34px rgba(47, 107, 95, 0.22);
+        }
+
+        .btn-secondary {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.58);
+            border-color: rgba(24, 51, 45, 0.08);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible {
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            padding: 1rem 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: var(--header-height);
+            padding: 0.9rem 1.1rem 0.9rem 1.3rem;
+            border-radius: 999px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-mark {
+            width: 2.45rem;
+            height: 2.45rem;
+            border-radius: 0.95rem;
+            display: grid;
+            place-items: center;
+            color: var(--brand-deep);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(216, 231, 226, 0.88));
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            color: var(--text-soft);
+            font-size: 0.96rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            padding: 0.35rem 0;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(47, 107, 95, 0.35);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        .hero {
+            padding: 2rem 0 2.4rem;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        .hero-copy,
+        .hero-visual {
+            position: relative;
+            border-radius: var(--radius-xl);
+        }
+
+        .hero-copy {
+            padding: clamp(1.75rem, 3vw, 3.25rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.55rem;
+            min-height: 39rem;
+        }
+
+        .hero-copy::before {
+            content: "";
+            position: absolute;
+            inset: 1rem;
+            border-radius: calc(var(--radius-xl) - 12px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), transparent 46%);
+            pointer-events: none;
+        }
+
+        .hero-copy p {
+            max-width: 36rem;
+            font-size: 1.05rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .hero-meta span {
+            padding: 0.75rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            color: var(--text-soft);
+            font-size: 0.92rem;
+        }
+
+        .hero-visual {
+            overflow: hidden;
+            min-height: 39rem;
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.28));
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+        }
+
+        .hero-visual::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.45), transparent 26%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 32%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .viewer-copy {
+            position: absolute;
+            inset: 1.2rem 1.2rem auto 1.2rem;
+            z-index: 2;
+            max-width: 19rem;
+            padding: 1rem 1.05rem;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.52);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .viewer-copy strong {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-size: 0.94rem;
+        }
+
+        .viewer-copy span {
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        spline-viewer {
+            position: absolute;
+            inset: 4rem 0 0;
+            width: 100%;
+            height: calc(100% - 4rem);
+            display: block;
+            background: transparent;
+            transform: scale(1.02);
+            transition: transform 500ms ease, filter 500ms ease;
+        }
+
+        .hero-visual:hover spline-viewer,
+        .hero-visual:focus-within spline-viewer {
+            transform: scale(1.04);
+            filter: saturate(1.02);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-card,
+        .team-card,
+        .service-card,
+        .cta-panel,
+        .about-panel {
+            border-radius: var(--radius-lg);
+        }
+
+        .quick-card,
+        .team-card,
+        .service-card {
+            padding: 1.5rem;
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+        }
+
+        .quick-card:hover,
+        .team-card:hover,
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+            border-color: rgba(47, 107, 95, 0.12);
+        }
+
+        .quick-icon {
+            width: 3rem;
+            height: 3rem;
+            display: grid;
+            place-items: center;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(226, 236, 232, 0.86));
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            color: var(--brand-deep);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        }
+
+        .about-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            gap: 1.25rem;
+            padding: 1.5rem;
+        }
+
+        .about-copy,
+        .about-values {
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.38);
+            border: 1px solid rgba(255, 255, 255, 0.68);
+        }
+
+        .value-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .value-list strong {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.98rem;
+        }
+
+        .team-grid,
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .team-photo {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1.35rem;
+            display: grid;
+            place-items: center;
+            margin-bottom: 1.1rem;
+            background: linear-gradient(180deg, rgba(221, 234, 229, 0.95), rgba(194, 214, 207, 0.85));
+            color: var(--brand-deep);
+            font-weight: 700;
+        }
+
+        .team-role,
+        .service-tag {
+            display: inline-flex;
+            margin-top: 0.9rem;
+            padding: 0.42rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+        }
+
+        .services-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .service-card {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .cta-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.4rem;
+            padding: clamp(1.5rem, 2.4vw, 2.2rem);
+        }
+
+        .cta-panel p {
+            max-width: 34rem;
+        }
+
+        .site-footer {
+            padding: 0 0 1.4rem;
+        }
+
+        .footer-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) minmax(0, 0.8fr);
+            gap: 1.2rem;
+            padding: 1.4rem;
+            border-radius: var(--radius-xl);
+        }
+
+        .footer-shell strong {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.96rem;
+        }
+
+        .footer-list {
+            display: grid;
+            gap: 0.6rem;
+            color: var(--text-soft);
+        }
+
+        .footer-note {
+            padding-top: 0.5rem;
+            color: var(--text-faint);
+            font-size: 0.92rem;
+        }
+
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 700ms ease, transform 700ms ease;
+        }
+
+        [data-reveal].is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                transform: translate3d(2rem, 2rem, 0) scale(1.06);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .nav-shell {
+                border-radius: 2rem;
+            }
+
+            .hero-grid,
+            .about-panel,
+            .footer-shell,
+            .cta-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 820px) {
+            .site-header {
+                position: static;
+                padding-bottom: 0;
+            }
+
+            .nav-shell {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.9rem 1.2rem;
+            }
+
+            .hero-copy,
+            .hero-visual {
+                min-height: unset;
+            }
+
+            .quick-actions,
+            .team-grid,
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .section {
+                padding: 3.5rem 0;
+            }
+
+            .hero {
+                padding-top: 1.3rem;
+            }
+
+            .hero-copy,
+            .viewer-copy,
+            .quick-card,
+            .team-card,
+            .service-card,
+            .about-copy,
+            .about-values,
+            .cta-panel,
+            .footer-shell {
+                padding: 1.2rem;
+            }
+
+            spline-viewer {
+                inset: 5rem 0 0;
+                height: calc(100% - 5rem);
+            }
+
+            .btn-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-shell glass">
+                <a class="brand" href="#inicio" aria-label="Ir para o inicio da pagina">
+                    <span class="brand-mark">EH</span>
+                    <span>EUTON HEALTH</span>
+                </a>
+
+                <nav class="nav-links" aria-label="Navegacao principal">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#sobre">Sobre</a>
+                    <a href="#equipe">Equipe</a>
+                    <a href="#servicos">Servicos</a>
+                    <a href="#contato">Contato</a>
+                </nav>
+
+                <a class="btn btn-primary" th:href="@{/login}" href="/login">Agendar consulta</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="container hero-grid">
+                <article class="hero-copy glass" data-reveal>
+                    <span class="eyebrow">Cuidado psicologico com escuta qualificada</span>
+                    <h1>Sua saude mental merece atencao.</h1>
+                    <p>
+                        Atendimento clinico com abordagem etica, acolhedora e fundamentada em pratica
+                        responsavel. Um espaco para iniciar processos de cuidado com clareza,
+                        privacidade e acompanhamento profissional.
+                    </p>
+
+                    <div class="btn-row">
+                        <a class="btn btn-primary" th:href="@{/login}" href="/login">
+                            Inicie seu processo de cuidado
+                        </a>
+                        <a class="btn btn-secondary" href="#equipe">Conheca nossa equipe</a>
+                    </div>
+
+                    <div class="hero-meta" aria-label="Destaques institucionais">
+                        <span>Atendimento online e presencial</span>
+                        <span>Equipe multidisciplinar</span>
+                        <span>Processo de acolhimento continuo</span>
+                    </div>
+                </article>
+
+                <aside class="hero-visual glass" aria-label="Composicao visual da experiencia 3D" data-reveal>
+                    <div class="viewer-copy">
+                        <strong id="spline-status-title">Cena visual de apoio</strong>
+                        <span id="spline-status-text">
+                            Elemento 3D sutil para reforcar profundidade e presenca, sem competir com a leitura.
+                        </span>
+                    </div>
+
+                    <spline-viewer id="spline-viewer" loading-anim-type="spinner-small-dark"></spline-viewer>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" aria-labelledby="acoes-rapidas-titulo">
+            <div class="container">
+                <div class="section-header" data-reveal>
+                    <span class="eyebrow">Acesso rapido</span>
+                    <h2 id="acoes-rapidas-titulo">Escolha o caminho que melhor atende a sua necessidade neste momento.</h2>
+                </div>
+
+                <div class="quick-actions">
+                    <article class="quick-card glass" data-reveal>
+                        <div class="quick-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M10.5 17a6.5 6.5 0 1 1 4.419-11.267A6.5 6.5 0 0 1 10.5 17Zm0 0 7 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3>Buscar profissional</h3>
+                        <p>Conheca perfis e especialidades para encontrar o acompanhamento mais adequado ao seu contexto.</p>
+                    </article>
+
+                    <article class="quick-card glass" data-reveal>
+                        <div class="quick-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M7 3v3M17 3v3M4 9h16M6 6h12a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Agendar consulta</h3>
+                        <p>Inicie seu atendimento com um fluxo simples, seguro e preparado para dar continuidade ao cuidado.</p>
+                    </article>
+
+                    <article class="quick-card glass" data-reveal>
+                        <div class="quick-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 8.5h16M4 15.5h10M4 4h16a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 20 20H4A1.5 1.5 0 0 1 2.5 18.5v-13A1.5 1.5 0 0 1 4 4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3>Tipos de atendimento</h3>
+                        <p>Veja modalidades clinicas e formatos de acompanhamento pensados para diferentes etapas do processo.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="sobre" aria-labelledby="sobre-titulo">
+            <div class="container">
+                <div class="about-panel glass">
+                    <div class="about-copy" data-reveal>
+                        <span class="eyebrow">Sobre a abordagem</span>
+                        <h2 id="sobre-titulo">Cuidado clinico centrado em escuta, evidencia e vinculo terapeutico.</h2>
+                        <p>
+                            Nossa proposta parte de uma comunicacao clara, acolhedora e responsavel. Cada
+                            atendimento respeita o tempo de quem procura ajuda e valoriza processos
+                            construidos com consistencia, etica e fundamentacao tecnica.
+                        </p>
+                    </div>
+
+                    <div class="about-values" data-reveal>
+                        <div class="value-list">
+                            <div>
+                                <strong>Leitura cuidadosa de cada historia</strong>
+                                <p>Entendimento contextual antes de qualquer plano de acompanhamento.</p>
+                            </div>
+                            <div>
+                                <strong>Pratica clinica responsavel</strong>
+                                <p>Atuacao orientada por criterios eticos, confidencialidade e referencias cientificas.</p>
+                            </div>
+                            <div>
+                                <strong>Relacao terapeutica confiavel</strong>
+                                <p>Espaco para conversas honestas, com escuta atenta e acompanhamento continuado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="equipe" aria-labelledby="equipe-titulo">
+            <div class="container">
+                <div class="section-header" data-reveal>
+                    <span class="eyebrow">Equipe</span>
+                    <h2 id="equipe-titulo">Profissionais preparados para acolher diferentes demandas com seriedade e presenca clinica.</h2>
+                </div>
+
+                <div class="team-grid">
+                    <article class="team-card glass" data-reveal>
+                        <div class="team-photo" aria-hidden="true">AM</div>
+                        <h3>Dra. Ana Martins</h3>
+                        <p>Psicoterapia individual com foco em ansiedade, transicoes de vida e regulacao emocional.</p>
+                        <span class="team-role">CRP e atendimento adulto</span>
+                    </article>
+
+                    <article class="team-card glass" data-reveal>
+                        <div class="team-photo" aria-hidden="true">RL</div>
+                        <h3>Dr. Rafael Lima</h3>
+                        <p>Terapia de casal e mediação de conflitos com abordagem voltada para comunicacao e vinculo.</p>
+                        <span class="team-role">Relacoes e dinamicas familiares</span>
+                    </article>
+
+                    <article class="team-card glass" data-reveal>
+                        <div class="team-photo" aria-hidden="true">CS</div>
+                        <h3>Dra. Camila Souza</h3>
+                        <p>Psicologia infantil e orientacao parental com escuta acolhedora e trabalho interdisciplinar.</p>
+                        <span class="team-role">Infancia e desenvolvimento</span>
+                    </article>
+                </div>
+
+                <div class="btn-row" style="margin-top: 1.5rem;" data-reveal>
+                    <a class="btn btn-secondary" th:href="@{/cadastro}" href="/cadastro">Ver equipe completa</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="servicos" aria-labelledby="servicos-titulo">
+            <div class="container">
+                <div class="section-header" data-reveal>
+                    <span class="eyebrow">Servicos</span>
+                    <h2 id="servicos-titulo">Areas de atuacao com foco em clareza, cuidado continuo e responsabilidade profissional.</h2>
+                </div>
+
+                <div class="services-grid">
+                    <article class="service-card glass" data-reveal>
+                        <h3>Psicoterapia individual</h3>
+                        <p>Espaco de acompanhamento clinico para sofrimento emocional, autoconhecimento e reorganizacao da rotina psiquica.</p>
+                        <span class="service-tag">Atendimento adulto</span>
+                    </article>
+
+                    <article class="service-card glass" data-reveal>
+                        <h3>Terapia de casal</h3>
+                        <p>Intervencao voltada para dialogo, escuta das dinâmicas relacionais e construcao de novos acordos.</p>
+                        <span class="service-tag">Relacao e convivio</span>
+                    </article>
+
+                    <article class="service-card glass" data-reveal>
+                        <h3>Psicologia infantil</h3>
+                        <p>Acompanhamento de criancas e familias com linguagem apropriada ao desenvolvimento e orientacao aos cuidadores.</p>
+                        <span class="service-tag">Infancia e familia</span>
+                    </article>
+
+                    <article class="service-card glass" data-reveal>
+                        <h3>Avaliacao psicologica</h3>
+                        <p>Processo estruturado para investigacao clinica, com criterios tecnicos e devolutiva organizada.</p>
+                        <span class="service-tag">Processo avaliativo</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contato" aria-labelledby="cta-titulo">
+            <div class="container">
+                <div class="cta-panel glass" data-reveal>
+                    <div>
+                        <span class="eyebrow">Contato</span>
+                        <h2 id="cta-titulo">Voce nao precisa enfrentar tudo sozinho.</h2>
+                        <p>
+                            Se este for um bom momento para comecar, nossa equipe pode orientar os
+                            proximos passos com tranquilidade e clareza.
+                        </p>
+                    </div>
+
+                    <div class="btn-row">
+                        <a class="btn btn-primary" th:href="@{/login}" href="/login">Agendar consulta</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-shell glass">
+                <div>
+                    <strong>EUTON HEALTH</strong>
+                    <p>
+                        Clinica de cuidado psicologico com atendimento acolhedor, comunicacao clara e
+                        estrutura preparada para acompanhamento continuo.
+                    </p>
+                    <p class="footer-note">Segunda a sexta, das 8h as 20h.</p>
+                </div>
+
+                <div>
+                    <strong>Links uteis</strong>
+                    <div class="footer-list">
+                        <a href="#sobre">Sobre</a>
+                        <a href="#servicos">Servicos</a>
+                        <a th:href="@{/login}" href="/login">Area de acesso</a>
+                        <a th:href="@{/cadastro}" href="/cadastro">Criar cadastro</a>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Contato institucional</strong>
+                    <div class="footer-list">
+                        <span>contato@eutonhealth.com</span>
+                        <span>(11) 4000-2024</span>
+                        <span>Instagram e LinkedIn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* =========================
+           Interatividade / Spline
+        ========================== */
+        const SPLINE_SCENE_URL = "https://prod.spline.design/UWoeqiir20o49Dah/scene.splinecode";
+
+        const splineViewer = document.getElementById("spline-viewer");
+        const splineStatusTitle = document.getElementById("spline-status-title");
+        const splineStatusText = document.getElementById("spline-status-text");
+        const revealItems = document.querySelectorAll("[data-reveal]");
+
+        function updateSplineStatus(title, text) {
+            splineStatusTitle.textContent = title;
+            splineStatusText.textContent = text;
+        }
+
+        function setupSplineViewer() {
+            if (!splineViewer) {
+                return;
+            }
+
+            splineViewer.setAttribute("url", SPLINE_SCENE_URL);
+            splineViewer.setAttribute("events-target", "global");
+            splineViewer.setAttribute("background", "transparent");
+        }
+
+        function onSplineReady() {
+            updateSplineStatus(
+                "Experiencia visual carregada",
+                "A cena 3D esta ativa como elemento de apoio visual na primeira dobra."
+            );
+        }
+
+        function onSplineError() {
+            updateSplineStatus(
+                "Cena visual indisponivel",
+                "A estrutura da pagina permanece funcional; basta substituir a URL por uma cena publicada."
+            );
+        }
+
+        function setupRevealObserver() {
+            if (!("IntersectionObserver" in window)) {
+                revealItems.forEach((item) => item.classList.add("is-visible"));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15
+            });
+
+            revealItems.forEach((item) => observer.observe(item));
+        }
+
+        async function initPage() {
+            setupRevealObserver();
+            setupSplineViewer();
+
+            if (!splineViewer) {
+                return;
+            }
+
+            try {
+                await customElements.whenDefined("spline-viewer");
+                splineViewer.addEventListener("load", onSplineReady, { once: true });
+                splineViewer.addEventListener("error", onSplineError, { once: true });
+            } catch (error) {
+                console.error("Falha ao inicializar o Spline Viewer:", error);
+                onSplineError();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", initPage);
+    </script>
+</body>
+</html>

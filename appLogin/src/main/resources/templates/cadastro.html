@@ -1,358 +1,391 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - EUTON HEALTH</title>
+    <title>Criar cadastro | EUTON HEALTH</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        :root {
+            --bg-base: #f3f7f5;
+            --surface: rgba(255, 255, 255, 0.74);
+            --surface-soft: rgba(255, 255, 255, 0.5);
+            --text-main: #18332d;
+            --text-soft: #57706a;
+            --text-faint: #728883;
+            --line-soft: rgba(24, 51, 45, 0.1);
+            --brand: #2f6b5f;
+            --brand-deep: #234f46;
+            --danger-bg: #f8e9e7;
+            --danger-text: #9f4f4b;
+            --shadow: 0 28px 70px rgba(35, 62, 56, 0.1);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --transition: 240ms ease-in-out;
+        }
+
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 50%, #667eea 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0;
             min-height: 100vh;
-            overflow-y: auto;
-            padding: 20px;
-            position: relative;
+            padding: 1.2rem;
+            font-family: "Inter", system-ui, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at top left, rgba(174, 203, 195, 0.5), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(172, 188, 207, 0.24), transparent 28%),
+                linear-gradient(180deg, #f7faf8, #f1f6f3 40%, #edf3f0 100%);
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 28rem;
+            height: 28rem;
+            border-radius: 50%;
+            filter: blur(26px);
+            opacity: 0.45;
+            z-index: -1;
+            pointer-events: none;
+            animation: drift 18s ease-in-out infinite alternate;
         }
 
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(74, 124, 89, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(143, 188, 143, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(102, 126, 234, 0.2) 0%, transparent 50%);
-            z-index: 0;
+            top: -9rem;
+            left: -7rem;
+            background: radial-gradient(circle, rgba(148, 179, 171, 0.26), transparent 66%);
         }
 
-        /* Efeito de fundo animado com glassmorphism */
         body::after {
-            content: '';
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            top: -50px;
-            left: -50px;
-            animation: float 6s ease-in-out infinite;
-            z-index: 0;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            right: -9rem;
+            bottom: -9rem;
+            background: radial-gradient(circle, rgba(145, 165, 184, 0.22), transparent 66%);
+            animation-duration: 22s;
         }
 
-        /* Segundo elemento flutuante com efeito granulado */
-        .floating-bubble {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            background: 
-                radial-gradient(circle, rgba(143, 188, 143, 0.15) 0%, rgba(74, 124, 89, 0.1) 100%);
-            border-radius: 50%;
-            bottom: -30px;
-            right: -30px;
-            animation: float 8s ease-in-out infinite reverse;
-            z-index: 0;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            filter: contrast(1.1);
+        .shell {
+            width: min(1160px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+            gap: 1rem;
         }
 
-        .floating-bubble::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 10%;
-            right: 10%;
-            bottom: 10%;
-            background: 
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.03) 2px,
-                    rgba(255, 255, 255, 0.03) 4px
-                );
-            border-radius: 50%;
+        .glass {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), var(--surface));
+            border: 1px solid rgba(255, 255, 255, 0.74);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px) saturate(135%);
+            -webkit-backdrop-filter: blur(18px) saturate(135%);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(20px); }
+        .side-panel,
+        .form-panel {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
         }
 
-        .register-container {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            width: 100%;
-            max-width: 450px;
-            position: relative;
-            z-index: 1;
-            backdrop-filter: blur(20px);
-            animation: slideUp 0.5s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .register-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 1px,
-                    rgba(255, 255, 255, 0.02) 1px,
-                    rgba(255, 255, 255, 0.02) 2px
-                );
-            border-radius: 20px;
-            pointer-events: none;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 100%);
-            border-radius: 16px;
+        .side-panel {
+            padding: clamp(1.6rem, 3vw, 3rem);
             display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 46rem;
+        }
+
+        .eyebrow {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 32px;
-            box-shadow: 
-                0 8px 20px rgba(74, 124, 89, 0.3),
-                0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 2rem;
+            height: 1px;
+            background: rgba(47, 107, 95, 0.35);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            max-width: 10ch;
+            font-size: clamp(2.2rem, 4vw, 4rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            margin-top: 1rem;
         }
 
         h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 1.9rem;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 30px;
+        p {
+            color: var(--text-soft);
+            line-height: 1.72;
+        }
+
+        .side-list {
+            display: grid;
+            gap: 0.95rem;
+        }
+
+        .side-list article {
+            padding: 1rem 1.05rem;
+            border-radius: var(--radius-md);
+            background: var(--surface-soft);
+            border: 1px solid rgba(255, 255, 255, 0.74);
+        }
+
+        .side-list strong {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.96rem;
+        }
+
+        .back-link {
+            width: fit-content;
+            color: var(--text-soft);
+            font-size: 0.94rem;
+            transition: color var(--transition);
+        }
+
+        .back-link:hover,
+        .back-link:focus-visible {
+            color: var(--brand-deep);
+        }
+
+        .form-panel {
+            padding: 1.4rem;
+        }
+
+        .panel-card {
+            padding: 1.6rem;
+            height: 100%;
+            border-radius: calc(var(--radius-xl) - 8px);
+            background: rgba(255, 255, 255, 0.48);
+            border: 1px solid rgba(255, 255, 255, 0.74);
+        }
+
+        .panel-card > p {
+            margin: 0.7rem 0 1.5rem;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
-            position: relative;
+            display: grid;
+            gap: 0.45rem;
         }
 
         label {
-            display: block;
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 0.92rem;
+            font-weight: 600;
         }
 
         input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: #fafafa;
+            min-height: 3.3rem;
+            padding: 0.9rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--line-soft);
+            background: rgba(255, 255, 255, 0.76);
+            color: var(--text-main);
+            transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
         }
 
         input:focus {
             outline: none;
-            border-color: #4a7c59;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 
-                0 0 0 3px rgba(74, 124, 89, 0.1),
-                0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            backdrop-filter: blur(5px);
+            border-color: rgba(47, 107, 95, 0.4);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 0 0 4px rgba(47, 107, 95, 0.08);
         }
 
-        input::placeholder {
-            color: #bbb;
+        .field-error {
+            color: var(--danger-text);
+            font-size: 0.84rem;
+            line-height: 1.45;
         }
 
-        button {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 100%);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+        .message {
+            padding: 0.9rem 1rem;
+            border-radius: 1rem;
+            background: var(--danger-bg);
+            border: 1px solid rgba(159, 79, 75, 0.12);
+            color: var(--danger-text);
+            font-size: 0.93rem;
+            line-height: 1.55;
+        }
+
+        .btn {
+            min-height: 3.35rem;
+            border: 0;
+            border-radius: 999px;
+            color: #f6fbf9;
+            background: linear-gradient(180deg, var(--brand), var(--brand-deep));
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 
-                0 5px 15px rgba(74, 124, 89, 0.4),
-                0 1px 0 rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
+            transition: transform var(--transition), box-shadow var(--transition);
+            box-shadow: 0 16px 28px rgba(47, 107, 95, 0.18);
         }
 
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+        .btn:hover,
+        .btn:focus-visible {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 36px rgba(47, 107, 95, 0.22);
         }
 
-        button:hover::before {
-            left: 100%;
+        .form-footer {
+            margin-top: 1.35rem;
+            color: var(--text-soft);
+            font-size: 0.92rem;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 20px rgba(74, 124, 89, 0.6),
-                0 1px 0 rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, #5a8c69 0%, #9fcc9f 100%);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .error {
-            background-color: #fee;
-            color: #c33;
-            padding: 12px 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 20px;
-            border-left: 4px solid #c33;
-            font-size: 14px;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .footer-text {
-            text-align: center;
-            color: #999;
-            font-size: 13px;
-            margin-top: 20px;
-        }
-
-        .footer-text a {
-            color: #667eea;
-            text-decoration: none;
+        .form-footer a {
+            color: var(--brand-deep);
             font-weight: 600;
-            transition: color 0.3s ease;
         }
 
-        .footer-text a:hover {
-            color: #764ba2;
+        @keyframes drift {
+            from {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                transform: translate3d(1.8rem, 2rem, 0) scale(1.05);
+            }
         }
 
-        @media (max-width: 480px) {
-            .register-container {
-                padding: 30px 20px;
-                margin: 20px;
+        @media (max-width: 980px) {
+            .shell {
+                grid-template-columns: 1fr;
             }
 
-            h2 {
-                font-size: 24px;
+            .side-panel {
+                min-height: unset;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 0.8rem;
             }
 
-            input {
-                font-size: 16px;
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel,
+            .form-panel,
+            .panel-card {
+                padding: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <div class="logo-section">
-            <div class="logo-icon">🏥</div>
-            <h2>Criar Conta</h2>
-            <p class="subtitle">Inscreva-se para acessar o acompanhamento psicológico online</p>
-        </div>
-
-        <form th:action="@{/cadastroUsuario}" method="post">
-            <p th:if="${param.error}" class="error">❌ Erro ao criar conta!</p>
-            <p th:if="${param.success}" class="error" style="background-color: #efe; color: #3c3; border-left-color: #3c3;">✅ Conta criada com sucesso! Faça login.</p>
-
-            <div class="form-group">
-                <label for="nome">Nome Completo</label>
-                <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+    <main class="shell">
+        <section class="side-panel glass" aria-labelledby="cadastro-side-title">
+            <div>
+                <span class="eyebrow">Cadastro inicial</span>
+                <h1 id="cadastro-side-title">Comece seu acesso com informacoes essenciais.</h1>
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+            
+            <div class="side-list" aria-label="Informacoes sobre o cadastro">
+                <article>
+                    <strong>Processo simples</strong>
+                    <p>Preencha seus dados basicos e conclua a criacao da conta em poucos passos.</p>
+                </article>
+                <article>
+                    <strong>Clareza desde o inicio</strong>
+                    <p>O ambiente foi pensado para facilitar o acesso sem excesso de elementos visuais.</p>
+                </article>
+                <article>
+                    <strong>Continuidade do cuidado</strong>
+                    <p>Depois do cadastro, voce podera acessar a plataforma e seguir para o agendamento.</p>
+                </article>
             </div>
 
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite uma senha segura" required>
+            <a class="back-link" th:href="@{/}" href="/">Voltar para a pagina inicial</a>
+        </section>
+
+        <section class="form-panel glass" aria-labelledby="cadastro-form-title">
+            <div class="panel-card">
+                <h2 id="cadastro-form-title">Criar conta</h2>
+                <p>Preencha os campos abaixo para iniciar seu acesso ao ambiente da clinica.</p>
+
+                <form th:action="@{/cadastroUsuario}" method="post" th:object="${usuario}">
+                    <p th:if="${#fields.hasGlobalErrors()}" class="message" th:each="erro : ${#fields.globalErrors()}" th:text="${erro}"></p>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <div class="form-group">
+                        <label for="nome">Nome completo</label>
+                        <input type="text" id="nome" th:field="*{nome}" placeholder="Como voce gostaria de ser identificado(a)" required>
+                        <small class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" th:field="*{email}" placeholder="seuemail@exemplo.com" required>
+                            <small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmSenha">Senha</label>
+                            <input type="password" id="confirmSenha" name="confirmSenha" placeholder="Crie uma senha segura" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha">Confirmar senha</label>
+                        <input type="password" id="senha" th:field="*{senha}" placeholder="Repita a senha" required>
+                        <small class="field-error" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></small>
+                    </div>
+
+                    <button class="btn" type="submit">Concluir cadastro</button>
+                </form>
+
+                <div class="form-footer">
+                    <span>Ja possui acesso?</span>
+                    <a th:href="@{/login}" href="/login">Entrar na plataforma</a>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="confirmSenha">Confirmar Senha</label>
-                <input type="password" id="confirmSenha" name="confirmSenha" placeholder="Confirme sua senha" required>
-            </div>
-
-            <button type="submit">Registrar</button>
-        </form>
-
-        <p class="footer-text">
-            Já tem conta? <a href="/login">Faça login aqui</a>
-        </p>
-    </div>
-    <div class="floating-bubble"></div>
+        </section>
+    </main>
 </body>
 </html>
