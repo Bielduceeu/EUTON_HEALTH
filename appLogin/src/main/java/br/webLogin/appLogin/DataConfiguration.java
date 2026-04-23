@@ -26,7 +26,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
         return dataSource; //o retorno existe para que o Spring possa usar essa configuração para se conectar ao banco de dados MySQL.
     }
     
-    @Bean
+    @Bean /* @Bean dentro do código significa */
     public JpaVendorAdapter jpaVendorAdapter(){ //este método serve para configurar o adaptador JPA (Java Persistence API) para o Hibernate, que é a implementação de JPA utilizada neste projeto. O adaptador é responsável por fornecer informações sobre o banco de dados e as configurações específicas do Hibernate.
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.MYSQL); // este processo de setar serve para informar ao Hibernate que o banco de dados utilizado é o MySQL, permitindo que ele otimize as operações de acordo com as características específicas desse banco de dados.
