@@ -30,6 +30,16 @@ public class Usuario {
         @NotEmpty
         private String senha;
 
+        // Getters e Setters gerados por @Data do Lombok
+        // (Mantendo explicitamente aqui para compatibilidade com compilador)
+        public long getId() {
+                return id;
+        }
+
+        public void setId(long id) {
+                this.id = id;
+        }
+
         public String getNome() {
                 return nome;
         }
@@ -37,7 +47,7 @@ public class Usuario {
         public void setNome(String nome) {
                 this.nome = nome;
         }
-        
+
         public String getEmail() {
                 return email;
         }
@@ -46,19 +56,11 @@ public class Usuario {
                 this.email = email;
         }
 
-
         public String getSenha() {
                 return senha;
         }
+
         public void setSenha(String senha) {
                 this.senha = senha;
         }
-
-        public long getId() {
-                return id;
-        }
-
-        public void setId(long id) {
-                this.id = id;
-        }
-   }
+}

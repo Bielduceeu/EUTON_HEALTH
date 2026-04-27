@@ -32,7 +32,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/", "/index", "/login", "/cadastro", "/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login", "/cadastroUsuario").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/favicon.ico", "/images/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/favicon.ico", "/images/**").permitAll()/*Esta linha garante que qualquer reque
+                st que comece com "/css/", "/js/", "/favicon.ico" ou "/images/" seja permitido */
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
